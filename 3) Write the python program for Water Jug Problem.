@@ -1,0 +1,51 @@
+from collections import deque
+
+def water_jug_problem(capacity_a, capacity_b, target):
+    # Define the initial state (both jugs empty)
+    initial_state = (0, 0)
+
+    # Define a queue for BFS and add the initial state
+    queue = deque([(initial_state, [])])
+    visited = set()
+    visited.add(initial_state)
+
+    while queue:
+        (current_a, current_b), path = queue.popleft()
+
+        # Check if we have reached the target
+        if current_a == target or current_b == target:
+            return path + [(current_a, current_b)]
+
+        # Possible actions
+        actions = [
+            ("Fill A", (capacity_a, current_b)),
+            ("Fill B", (current_a, capacity_b)),
+            ("Empty A", (0, current_b)),
+            ("Empty B", (current_a, 0)),
+            ("Pour A to B", (max(0, current_a - (capacity_b - current_b)), min(capacity_b, current_b + current_a))),
+            ("Pour B to A", (min(capacity_a, current_a + current_b), max(0, current_b - (capacity_a - current_a))))
+        ]
+
+        for action, (next_a, next_b) in actions:
+            next_state = (next_a, next_b)
+            if next_state not in visited:
+                visited.add(next_state)
+                queue.append((next_state, path + [action]))
+
+    return None
+
+def print_solution(actions):
+    if actions is None:
+        print("No solution exists.")
+    else:
+        print("Solution steps:")
+        for step in actions:
+            print(step)
+
+if __name__ == "__main__":
+    capacity_a = 4  # Capacity of jug A
+    capacity_b = 3  # Capacity of jug B
+    target = 2      # Target amount of water
+
+    actions = water_jug_problem(capacity_a, capacity_b, target)
+    print_solution(actions)

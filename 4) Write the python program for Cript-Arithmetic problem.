@@ -1,0 +1,39 @@
+from itertools import permutations
+
+def is_valid_assignment(send, more, money, assignment):
+    # Assign digits to letters
+    letters = "SENDMOREMONEY"
+    unique_letters = set(letters)
+    letter_to_digit = dict(zip(unique_letters, assignment)) # Create dictionary with all unique letters
+
+    # Convert words to numbers based on the current assignment
+    send_value = int(''.join(str(letter_to_digit[char]) for char in send))
+    more_value = int(''.join(str(letter_to_digit[char]) for char in more))
+    money_value = int(''.join(str(letter_to_digit[char]) for char in money))
+
+    # Check if the sum is correct
+    return send_value + more_value == money_value
+
+def solve_cryptarithmetic():
+    letters = "SENDMOREMONEY"
+    unique_letters = set(letters)
+
+    # Ensure we only use unique letters
+    if len(unique_letters) > 10:
+        print("Too many unique letters for digits 0-9.")
+        return
+
+    for perm in permutations(range(10), len(unique_letters)): # Generate permutations with the correct length
+        if is_valid_assignment("SEND", "MORE", "MONEY", perm):
+            letter_to_digit = dict(zip(unique_letters, perm))
+            print("Solution found:")
+            print(" ".join(f"{letter}: {digit}" for letter, digit in letter_to_digit.items()))
+            print(f"SEND = {int(''.join(str(letter_to_digit[char]) for char in 'SEND'))}")
+            print(f"MORE = {int(''.join(str(letter_to_digit[char]) for char in 'MORE'))}")
+            print(f"MONEY = {int(''.join(str(letter_to_digit[char]) for char in 'MONEY'))}")
+            return
+
+    print("No solution exists.")
+
+if __name__ == "__main__":
+    solve_cryptarithmetic()

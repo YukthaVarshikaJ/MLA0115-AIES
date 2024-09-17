@@ -1,0 +1,54 @@
+from collections import deque
+
+def is_valid(m_left, c_left, m_right, c_right):
+    return (0 <= m_left <= 3 and 0 <= c_left <= 3 and
+            0 <= m_right <= 3 and 0 <= c_right <= 3 and
+            (m_left == 0 or m_left >= c_left) and
+            (m_right == 0 or m_right >= c_right))
+
+def get_neighbors(state):
+    m_left, c_left, m_right, c_right, boat = state
+    moves = [(2, 0), (1, 1), (0, 2), (1, 0), (0, 1)]
+    neighbors = []
+
+    if boat:
+        for m, c in moves:
+            if is_valid(m_left - m, c_left - c, m_right + m, c_right + c):
+                neighbors.append((m_left - m, c_left - c, m_right + m, c_right + c, False))
+    else:
+        for m, c in moves:
+            if is_valid(m_left + m, c_left + c, m_right - m, c_right - c):
+                neighbors.append((m_left + m, c_left + c, m_right - m, c_right - c, True))
+
+    return neighbors
+
+def bfs_solver():
+    start = (3, 3, 0, 0, True)
+    goal = (0, 0, 3, 3, False)
+    queue = deque([(start, [])])
+    visited = set([start])
+
+    while queue:
+        (state, path) = queue.popleft()
+        if state == goal:
+            return path
+
+        for neighbor in get_neighbors(state):
+            if neighbor not in visited:
+                visited.add(neighbor)
+                queue.append((neighbor, path + [neighbor]))
+
+    return None
+
+def print_solution(path):
+    if path is None:
+        print("No solution exists.")
+        return
+
+    for step in path:
+        m_left, c_left, m_right, c_right, boat = step
+        print(f"Left: {m_left}M, {c_left}C | Right: {m_right}M, {c_right}C | Boat: {'Left' if boat else 'Right'}")
+
+if __name__ == "__main__":
+    path = bfs_solver()
+    print_solution(path)

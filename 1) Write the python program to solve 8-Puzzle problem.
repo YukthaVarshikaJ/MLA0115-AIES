@@ -1,0 +1,82 @@
+import heapq
+import itertools
+
+class PuzzleState:
+    def __init__(self, board, moves=0, parent=None):
+        self.board = board
+        self.blank_pos = board.index(0)
+        self.moves = moves
+        self.parent = parent
+        self.h = self.heuristic()
+
+    def heuristic(self):
+        # Manhattan distance heuristic
+        goal_pos = {n: (i, j) for i, row in enumerate([(1, 2, 3), (4, 5, 6), (7, 8, 0)]) for j, n in enumerate(row)}
+        h = 0
+        for idx, val in enumerate(self.board):
+            if val != 0:
+                goal_x, goal_y = goal_pos[val]
+                current_x, current_y = idx // 3, idx % 3
+                h += abs(goal_x - current_x) + abs(goal_y - current_y)
+        return h
+
+    def __lt__(self, other):
+        return (self.moves + self.h) < (other.moves + other.h)
+
+def generate_moves(state):
+    def swap_and_create(board, pos1, pos2):
+        new_board = list(board)
+        new_board[pos1], new_board[pos2] = new_board[pos2], new_board[pos1]
+        return tuple(new_board)
+
+    moves = []
+    blank_pos = state.blank_pos
+    blank_x, blank_y = divmod(blank_pos, 3)
+
+    for dx, dy in [(0, -1), (0, 1), (-1, 0), (1, 0)]:
+        new_x, new_y = blank_x + dx, blank_y + dy
+        if 0 <= new_x < 3 and 0 <= new_y < 3:
+            new_blank_pos = new_x * 3 + new_y
+            new_board = swap_and_create(state.board, blank_pos, new_blank_pos)
+            moves.append(PuzzleState(new_board, state.moves + 1, state))
+
+    return moves
+
+def a_star_search(start_state):
+    frontier = []
+    heapq.heappush(frontier, start_state)
+    explored = set()
+
+    while frontier:
+        current_state = heapq.heappop(frontier)
+        if current_state.board == (1, 2, 3, 4, 5, 6, 7, 8, 0):
+            return current_state
+
+        explored.add(current_state.board)
+
+        for next_state in generate_moves(current_state):
+            if next_state.board not in explored:
+                heapq.heappush(frontier, next_state)
+
+    return None
+
+def print_solution(state):
+    if state is None:
+        print("No solution found.")
+        return
+
+    path = []
+    while state:
+        path.append(state.board)
+        state = state.parent
+
+    path.reverse()
+    for step in path:
+        print(f"{step[0:3]}\n{step[3:6]}\n{step[6:9]}\n")
+
+if __name__ == "__main__":
+    start_board = (1, 2, 3, 4, 0, 5, 7, 8, 6)
+    start_state = PuzzleState(start_board)
+
+    solution = a_star_search(start_state)
+    print_solution(solution)

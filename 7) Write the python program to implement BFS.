@@ -1,0 +1,43 @@
+Breadth-First Search (BFS)
+
+ALGORITHM:
+1.Initialize: Start from the initial node and add it to a queue.
+2.Explore Nodes: Dequeue a node and explore its neighbors.
+3.Check for Goal: If a neighbor is the goal, return the path.
+4.Queue Neighbors: Add unvisited neighbors to the queue.
+5.Repeat: Continue until the queue is empty or the goal is found.
+
+PROGRAM:
+from collections import deque
+
+def bfs(graph, start_node):
+    visited = set()
+    queue = deque([start_node])
+    traversal_order = []
+    while queue:
+        node = queue.popleft()
+        if node not in visited:
+            visited.add(node)
+            traversal_order.append(node)
+            for neighbor in graph[node]:
+                if neighbor not in visited:
+                    queue.append(neighbor)
+    return traversal_order
+def main():
+    graph = {
+        'A': ['B', 'C'],
+        'B': ['A', 'D', 'E'],
+        'C': ['A', 'F'],
+        'D': ['B'],
+        'E': ['B', 'F'],
+        'F': ['C', 'E']
+    }
+    start_node = 'A'
+    print("Graph:")
+    for node, neighbors in graph.items():
+        print(f"{node}: {neighbors}")
+    print("\nBFS Traversal Order:")
+    traversal_order = bfs(graph, start_node)
+    print(traversal_order)
+if __name__ == "__main__":
+    main()

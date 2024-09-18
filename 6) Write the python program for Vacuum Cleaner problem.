@@ -1,0 +1,75 @@
+Vacuum Cleaner Problem
+
+ALGORITHM:
+1.Initialize: Define the environment (dirty and clean squares) and vacuum’s initial position.
+2.Generate Actions: Define possible actions (move, clean).
+3.Apply Actions: Simulate the result of actions on the environment.
+4.Check for Goal: Verify if all squares are clean.
+5.Plan Path: Use search algorithms (BFS, DFS) to determine the sequence of actions to clean all squares.
+
+
+PROGRAM:
+import random
+
+class VacuumCleaner:
+    def __init__(self, grid_size):
+        self.grid_size = grid_size
+        self.grid = [['dirty' if random.random() < 0.3 else 'clean' for _ in range(grid_size)] for _ in range(grid_size)]
+        self.x = random.randint(0, grid_size - 1)
+        self.y = random.randint(0, grid_size - 1)
+        self.cleaned_cells = 0
+    
+    def print_grid(self):
+        for row in self.grid:
+            print(' '.join(row))
+        print()
+    
+    def move(self, direction):
+        if direction == 'up' and self.x > 0:
+            self.x -= 1
+        elif direction == 'down' and self.x < self.grid_size - 1:
+            self.x += 1
+        elif direction == 'left' and self.y > 0:
+            self.y -= 1
+        elif direction == 'right' and self.y < self.grid_size - 1:
+            self.y += 1
+    
+    def clean(self):
+        if self.grid[self.x][self.y] == 'dirty':
+            self.grid[self.x][self.y] = 'clean'
+            self.cleaned_cells += 1
+    
+    def get_possible_moves(self):
+        moves = []
+        if self.x > 0:
+            moves.append('up')
+        if self.x < self.grid_size - 1:
+            moves.append('down')
+        if self.y > 0:
+            moves.append('left')
+        if self.y < self.grid_size - 1:
+            moves.append('right')
+        return moves
+    
+    def run(self):
+        while self.cleaned_cells < sum(row.count('dirty') for row in self.grid):
+            self.clean()
+            possible_moves = self.get_possible_moves()
+            if possible_moves:
+                self.move(random.choice(possible_moves))
+
+def main():
+    grid_size = 5
+    vacuum = VacuumCleaner(grid_size)
+    
+    print("Initial Grid:")
+    vacuum.print_grid()
+    
+    vacuum.run()
+    
+    print("Final Grid:")
+    vacuum.print_grid()
+    print(f"Total cleaned cells: {vacuum.cleaned_cells}")
+
+if __name__ == "__main__":
+    main()

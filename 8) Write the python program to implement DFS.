@@ -1,0 +1,43 @@
+Depth-First Search (DFS)
+
+ALGORITHM:
+1.Initialize: Start from the initial node and add it to a stack.
+2.Explore Nodes: Pop a node from the stack and explore its neighbors.
+3.Check for Goal: If a neighbor is the goal, return the path.
+4.Stack Neighbors: Add unvisited neighbors to the stack.
+5.Repeat: Continue until the stack is empty or the goal is found.
+
+PROGRAM:
+def dfs_recursive(graph, node, visited=None):
+    if visited is None:
+        visited = set()
+    visited.add(node)
+    return [node] + [n for neighbor in graph[node] if neighbor not in visited for n in dfs_recursive(graph, neighbor, visited)]
+def dfs_iterative(graph, start_node):
+    visited, stack, order = set(), [start_node], []
+    while stack:
+        node = stack.pop()
+        if node not in visited:
+            visited.add(node)
+            order.append(node)
+            stack.extend(reversed(graph[node]))
+    return order
+def main():
+    graph = {
+        'A': ['B', 'C'],
+        'B': ['A', 'D', 'E'],
+        'C': ['A', 'F'],
+        'D': ['B'],
+        'E': ['B', 'F'],
+        'F': ['C', 'E']
+    }
+    start_node = 'A'
+    print("Graph:")
+    for node, neighbors in graph.items():
+        print(f"{node}: {neighbors}")
+    print("\nDFS Traversal Order (Recursive):")
+    print(dfs_recursive(graph, start_node))
+    print("\nDFS Traversal Order (Iterative):")
+    print(dfs_iterative(graph, start_node))
+if __name__ == "__main__":
+    main()

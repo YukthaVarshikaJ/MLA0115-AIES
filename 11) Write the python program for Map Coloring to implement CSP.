@@ -1,0 +1,47 @@
+Map Coloring (CSP)
+ALGORITHM:
+1.Initialize: Define map regions and colors.
+2.Assign Colors: Try assigning colors to regions.
+3.Check Constraints: Ensure no two adjacent regions have the same color.
+4.Backtrack: If constraints are violated, try different color assignments.
+5.Return Solution: Return a valid coloring of the map.
+
+PROGRAM:
+def is_valid_color(graph, colors, node, color):
+    for neighbor in graph[node]:
+        if colors.get(neighbor) == color:
+            return False
+    return True
+def map_coloring(graph, colors, nodes, color_options, index):
+    if index == len(nodes):
+        return True
+    node = nodes[index]
+    for color in color_options:
+        if is_valid_color(graph, colors, node, color):
+            colors[node] = color
+            if map_coloring(graph, colors, nodes, color_options, index + 1):
+                return True
+            colors[node] = None
+    return False
+def print_colors(colors):
+    for node, color in colors.items():
+        print(f"Node {node}: Color {color}")
+def main():
+    graph = {
+        'A': ['B', 'C', 'D'],
+        'B': ['A', 'C', 'E'],
+        'C': ['A', 'B', 'F'],
+        'D': ['A', 'E'],
+        'E': ['B', 'D', 'F'],
+        'F': ['C', 'E']
+    }
+    color_options = ['Red', 'Green', 'Blue']
+    colors = {node: None for node in graph}
+    nodes = list(graph.keys())
+    if map_coloring(graph, colors, nodes, color_options, 0):
+        print("Solution found:")
+        print_colors(colors)
+    else:
+        print("No solution exists.")
+if __name__ == "__main__":
+    main()

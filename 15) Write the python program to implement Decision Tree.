@@ -1,0 +1,34 @@
+Decision Tree
+ALGORITHM:
+1.Initialize: Define the dataset and features.
+2.Split Data: Divide the data into subsets based on feature values.
+3.Build Tree: Recursively build the decision tree using entropy or Gini impurity.
+4.Prune Tree: Simplify the tree to avoid overfitting.
+5.Classify: Use the tree to classify new data points.
+
+PROGRAM:
+pip install scikit-learn
+
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+import matplotlib.pyplot as plt
+from sklearn import tree
+data = load_iris()
+X = data.data
+y = data.target
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+clf = DecisionTreeClassifier(random_state=42)
+clf.fit(X_train, y_train)
+y_pred = clf.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Accuracy: {accuracy:.2f}")
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred))
+print("Confusion Matrix:")
+print(confusion_matrix(y_test, y_pred))
+plt.figure(figsize=(12, 8))
+tree.plot_tree(clf, filled=True, feature_names=data.feature_names, class_names=data.target_names)
+plt.title("Decision Tree")
+plt.show()

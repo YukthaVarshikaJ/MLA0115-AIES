@@ -1,0 +1,93 @@
+Alpha-Beta Pruning
+ALGORITHM:
+1.Initialize: Define the game tree and the alpha and beta values.
+2.Generate Moves: Create all possible moves for the current player.
+3.Evaluate Nodes: Recursively evaluate nodes and prune branches where possible.
+4.Update Alpha/Beta: Update alpha and beta values during traversal.
+5.Prune Branches: Cut off branches that won’t affect the final decision.
+
+PROGRAM:
+import math
+def print_board(board):
+    print('\n'.join([' | '.join(row) for row in board]))
+    print('-' * 5)
+def check_winner(board, player):
+    lines = [board[i] for i in range(3)] + \
+            [[board[i][j] for i in range(3)] for j in range(3)] + \
+            [[board[i][i] for i in range(3)]] + \
+            [[board[i][2-i] for i in range(3)]]
+    return any(all(cell == player for cell in line) for line in lines)
+def check_draw(board):
+    return all(cell != ' ' for row in board for cell in row)
+def alpha_beta(board, depth, alpha, beta, is_maximizing):
+    scores = {'X': 10, 'O': -10, 'draw': 0}
+    if check_winner(board, 'X'): return scores['X']
+    if check_winner(board, 'O'): return scores['O']
+    if check_draw(board): return scores['draw']
+    best_score = -math.inf if is_maximizing else math.inf
+    for row in range(3):
+        for col in range(3):
+            if board[row][col] == ' ':
+                board[row][col] = 'X' if is_maximizing else 'O'
+                score = alpha_beta(board, depth + 1, alpha, beta, not is_maximizing)
+                board[row][col] = ' '
+                if is_maximizing:
+                    best_score = max(score, best_score)
+                    alpha = max(alpha, best_score)
+                else:
+                    best_score = min(score, best_score)
+                    beta = min(beta, best_score)
+                if beta <= alpha:
+                    return best_score
+    return best_score
+def find_best_move(board):
+    best_move = None
+    best_score = -math.inf
+    for row in range(3):
+        for col in range(3):
+            if board[row][col] == ' ':
+                board[row][col] = 'X'
+                score = alpha_beta(board, 0, -math.inf, math.inf, False)
+                board[row][col] = ' '
+                if score > best_score:
+                    best_score = score
+                    best_move = (row, col)
+    return best_move
+def main():
+    board = [[' ']*3 for _ in range(3)]
+    turn = 0
+    while True:
+        print_board(board)
+        if turn % 2 == 0:
+            try:
+                row, col = int(input("Enter row (0, 1, 2): ")), int(input("Enter column (0, 1, 2): "))
+                if board[row][col] == ' ':
+                    board[row][col] = 'O'
+                else:
+                    print("Cell taken, try again.")
+                    continue
+            except (IndexError, ValueError):
+                print("Invalid input, try again.")
+                continue
+        else:
+            print("AI's turn")
+            move = find_best_move(board)
+            if move:
+                board[move[0]][move[1]] = 'X'
+            else:
+                print("No valid moves left!")
+        if check_winner(board, 'X'):
+            print_board(board)
+            print("AI wins!")
+            break
+        if check_winner(board, 'O'):
+            print_board(board)
+            print("You win!")
+            break
+        if check_draw(board):
+            print_board(board)
+            print("It's a draw!")
+            break
+        turn += 1
+if __name__ == "__main__":
+    main()

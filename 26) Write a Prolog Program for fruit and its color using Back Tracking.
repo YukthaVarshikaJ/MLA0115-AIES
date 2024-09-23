@@ -1,0 +1,9 @@
+% fruit_color(Fruit, Color).
+fruit_color(apple, red).
+fruit_color(banana, yellow).
+fruit_color(grape, purple).
+fruit_color(orange, orange).
+
+% Query example (to demonstrate backtracking):
+% ?- fruit_color(Fruit, red).
+% ?- fruit_color(Fruit, Color).

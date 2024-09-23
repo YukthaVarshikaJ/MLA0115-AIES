@@ -1,0 +1,11 @@
+% planet(Name, DistanceFromSun, Moons).
+planet(mercury, 57.9, 0).
+planet(venus, 108.2, 0).
+planet(earth, 149.6, 1).
+planet(mars, 227.9, 2).
+planet(jupiter, 778.3, 79).
+planet(saturn, 1427, 83).
+
+% Query examples:
+% ?- planet(mars, Distance, Moons).
+% ?- planet(Name, Distance, 1).

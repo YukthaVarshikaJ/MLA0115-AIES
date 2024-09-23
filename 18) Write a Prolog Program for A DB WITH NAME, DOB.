@@ -1,0 +1,9 @@
+% name_dob(Name, DOB).
+name_dob(john, '12-Jan-1990').
+name_dob(sarah, '24-Feb-1992').
+name_dob(alex, '30-Mar-1991').
+name_dob(emma, '15-Apr-1995').
+
+% Query examples:
+% ?- name_dob(Name, '12-Jan-1990').
+% ?- name_dob(sarah, DOB).

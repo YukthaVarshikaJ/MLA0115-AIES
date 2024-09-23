@@ -1,0 +1,9 @@
+% state(MonkeyLocation, MonkeyHasBanana, BoxLocation).
+% Actions: move, push_box, climb_box, grab_banana.
+
+move(state(Location, HasBanana, Location), Location, state(Location, HasBanana, Location)).
+push_box(state(MonkeyLocation, no, MonkeyLocation), Destination, state(Destination, no, Destination)).
+climb_box(state(MonkeyLocation, no, BoxLocation), state(MonkeyLocation, yes, BoxLocation)).
+
+% Query example:
+% ?- move(state(room1, no, room2), room2, Result).

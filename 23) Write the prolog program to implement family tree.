@@ -1,0 +1,11 @@
+% parent(Parent, Child).
+parent(john, mary).
+parent(mary, susan).
+parent(susan, tom).
+
+% grandparent(Grandparent, Grandchild).
+grandparent(G, C) :- parent(G, P), parent(P, C).
+
+% Query examples:
+% ?- parent(john, Child).
+% ?- grandparent(john, Grandchild).

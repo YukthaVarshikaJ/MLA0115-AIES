@@ -1,0 +1,8 @@
+% diet(Disease, RecommendedDiet).
+diet(diabetes, 'Low sugar, high fiber').
+diet(hypertension, 'Low salt, high potassium').
+diet(anemia, 'High iron, vitamin C-rich foods').
+
+% Query examples:
+% ?- diet(diabetes, Diet).
+% ?- diet(Disease, 'Low salt, high potassium').

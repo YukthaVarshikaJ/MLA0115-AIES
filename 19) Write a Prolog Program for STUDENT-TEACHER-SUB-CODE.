@@ -1,0 +1,8 @@
+% student_teacher_sub(Student, Teacher, SubjectCode).
+student_teacher_sub(alice, prof_brown, cs101).
+student_teacher_sub(bob, prof_smith, math202).
+student_teacher_sub(claire, prof_adams, phy303).
+
+% Query examples:
+% ?- student_teacher_sub(alice, Teacher, SubjectCode).
+% ?- student_teacher_sub(Student, prof_smith, SubjectCode).

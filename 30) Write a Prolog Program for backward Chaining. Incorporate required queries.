@@ -1,0 +1,18 @@
+% Knowledge base
+parent(john, mary).
+parent(mary, susan).
+ancestor(X, Y) :- parent(X, Y).
+ancestor(X, Y) :- parent(X, Z), ancestor(Z, Y).
+
+% Backward chaining
+backward_chain(Goal) :- 
+    call(Goal),
+    write('Proven: '), write(Goal).
+
+backward_chain(Goal) :- 
+    not(call(Goal)),
+    write('Cannot prove: '), write(Goal).
+
+% Running backward chaining
+run_backward :-
+    backward_chain(ancestor(john, susan)).

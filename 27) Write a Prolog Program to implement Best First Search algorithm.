@@ -1,0 +1,33 @@
+% Define the graph with nodes and edges along with heuristic values
+edge(a, b, 2).
+edge(a, c, 5).
+edge(b, d, 1).
+edge(b, e, 6).
+edge(c, f, 2).
+edge(d, g, 3).
+edge(e, g, 2).
+edge(f, g, 1).
+
+heuristic(a, 7).
+heuristic(b, 4).
+heuristic(c, 6).
+heuristic(d, 2).
+heuristic(e, 5).
+heuristic(f, 3).
+heuristic(g, 0).
+
+% Best First Search algorithm
+best_first_search(Start, Goal, Path, Cost) :-
+    bfs([[Start, 0]], Goal, [], Path, Cost).
+
+bfs([[Goal, Cost]|_], Goal, Visited, Path, Cost) :- 
+    reverse([Goal|Visited], Path).
+
+bfs([[Node, Cost]|Rest], Goal, Visited, Path, TotalCost) :-
+    findall([NextNode, NewCost], 
+            (edge(Node, NextNode, StepCost), heuristic(NextNode, H), 
+             NewCost is Cost + StepCost + H), 
+            NextNodes),
+    append(Rest, NextNodes, NewQueue),
+    sort(2, @=<, NewQueue, SortedQueue),
+    bfs(SortedQueue, Goal, [Node|Visited], Path, TotalCost).

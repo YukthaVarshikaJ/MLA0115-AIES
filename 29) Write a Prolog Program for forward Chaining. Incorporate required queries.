@@ -1,0 +1,20 @@
+% Knowledge base
+fact(mammal(dog)).
+fact(mammal(cat)).
+rule(lives_in_water(X), mammal(X), X = dolphin).
+
+% Forward chaining
+forward_chain(Goal) :-
+    fact(Goal),
+    write('Goal is a known fact: '), write(Goal).
+
+forward_chain(Goal) :-
+    rule(Goal, Condition, Action),
+    fact(Condition),
+    call(Action),
+    assertz(fact(Goal)),
+    write('Derived new fact: '), write(Goal).
+
+% Run forward chaining
+run_forward :-
+    forward_chain(lives_in_water(dolphin)).

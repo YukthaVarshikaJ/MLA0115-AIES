@@ -1,0 +1,35 @@
+% Symptoms and Diseases
+disease(flu) :- 
+    symptom(fever), 
+    symptom(cough), 
+    symptom(sore_throat).
+    
+disease(cold) :- 
+    symptom(sneezing), 
+    symptom(runny_nose), 
+    symptom(cough).
+
+disease(covid19) :- 
+    symptom(fever), 
+    symptom(cough), 
+    symptom(shortness_of_breath), 
+    symptom(loss_of_taste_or_smell).
+
+% Medical Diagnosis based on symptoms
+diagnose(Disease) :- 
+    disease(Disease), !.
+
+ask_symptoms :-
+    write('Do you have fever? (yes/no)'), read(Ans1), 
+    (Ans1 == yes -> assertz(symptom(fever)); true),
+    write('Do you have cough? (yes/no)'), read(Ans2), 
+    (Ans2 == yes -> assertz(symptom(cough)); true),
+    write('Do you have sore throat? (yes/no)'), read(Ans3), 
+    (Ans3 == yes -> assertz(symptom(sore_throat)); true),
+    diagnose(Disease),
+    write('You may have: '), write(Disease).
+
+% Running the program
+start :-
+    write('Medical Diagnosis System'), nl,
+    ask_symptoms.
